@@ -8,21 +8,29 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
 
 ## Usage
 
-> [!TIP] You'll need a Mac running macOS 13.0 or later, with Inkscape installed.
+> [!TIP] You'll need a Mac running macOS 13.0 or later, with
+> [Inkscape](https://inkscape.org) and [mise](https://mise.jdx.dev) installed.
 
-1.  Clone this repo.
+1.  Clone this repo to your computer:
 
     ```bash
     git clone https://github.com/hulloitskai/stickers.git
     cd stickers
     ```
 
-2.  Find an photo you'd like to turn into a sticker. Then, cut out the subject
+2.  Install tool dependencies:
+
+    ```bash
+    mise install
+    ```
+
+3.  Find an photo you'd like to turn into a sticker. Then, cut out the subject
     (i.e. remove the background):
     - You can open the photo in Preview, right-click on it and select
       "Copy subject":
       <img src="./docs/copy_subject.png" width="400">
-    - You can use the Pen tool in Figma to create a vector mask of the subject:
+    - Alternatively, you can use the Pen tool in Figma to create a vector mask
+      of the subject:
 
       <img src="./docs/pen_tool.png" width="400">
 
@@ -37,13 +45,19 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
 
     The resulting image will be your "sticker image".
 
-3.  Convert the image to a black silhouette:
+    **Please place it in the
+    repository folder (i.e. `stickers/my-project/<file>.png`)**.
+
+4.  Convert the image to a black silhouette:
 
     ```bash
     mise silhouettify ./<file>.png  # creates ./<file>-silhouette.png
     ```
 
-4.  Use Inkscape to add a sticker border around your sticker image:
+    > [!TIP] `mise silhouettify` and other tools will also work in
+    > subdirectories within the the repo root.
+
+5.  Use Inkscape to add a sticker border around your sticker image:
     1. Open the silhouette image in Inkscape. Then, select the image in "Layers
        and Objects".
 
@@ -99,7 +113,6 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
         black.
 
        <img src="./docs/style_silhouette.png" width="400">
-       
     11. While making sure the silhouette vector is selected, press
         "Cmd + Shift + R" to resize the document to the size of the vector.
 
@@ -109,7 +122,7 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
 
         <img src="./docs/save_document.png" width="360">
 
-5.  Convert the black outline stroke into a CutContour line that a Roland vinyl
+6.  Convert the black outline stroke into a CutContour line that a Roland vinyl
     cutter will recognize and automatically cut after printing:
 
     ```bash
@@ -119,7 +132,7 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
     This file's physical printed size will vary according to the size of the
     sticker image, so:
 
-6.  (Optional) Resize the final PDF to a specific size for printing. Simply
+7.  (Optional) Resize the final PDF to a specific size for printing. Simply
     specify _EITHER_ the width or height, and the other dimension will be
     automatically computed to preserve the aspect ratio:
 
