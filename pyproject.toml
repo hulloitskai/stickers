@@ -1,0 +1,11 @@
+[project]
+name = "stickers"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "svgpathtools",
+    "reportlab",
+    "Pillow",
+    "typer>=0.24.1",
+    "pypdf",
+]

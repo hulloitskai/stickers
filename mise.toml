@@ -1,0 +1,34 @@
+[tools]
+python = "3.13"
+uv = "latest"
+
+[settings]
+experimental = true
+
+[settings.python]
+uv_venv_auto = "create|source"
+
+[hooks]
+postinstall = "uv sync"
+
+[tasks.cutcontour]
+description = "Generate CutContour PDF(s) from SVG file(s)"
+usage = 'arg "<svgs>" var=#true help="SVG file(s) to process"'
+run = "cd \"${MISE_ORIGINAL_CWD}\" && python \"${MISE_PROJECT_ROOT}/cutcontour.py\" $usage_svgs"
+
+[tasks.silhouettify]
+description = "Convert PNG file(s) to black silhouettes"
+usage = '''
+arg "<inputs>" var=#true help="PNG file(s) to process"
+flag "-o --output-dir <DIR>" help="Output directory (default: same as input)"
+'''
+run = "cd \"${MISE_ORIGINAL_CWD}\" && python \"${MISE_PROJECT_ROOT}/silhouettify.py\" ${usage_output_dir:+--output-dir $usage_output_dir} $usage_inputs"
+
+[tasks.resize]
+description = "Resize PDF(s) to a target height (-H) or width (-W) in cm"
+usage = '''
+flag "-H --height <CM>" help="Target height in cm"
+flag "-W --width <CM>" help="Target width in cm"
+arg "<inputs>" var=#true help="PDF files to resize"
+'''
+run = "cd \"${MISE_ORIGINAL_CWD}\" && python \"${MISE_PROJECT_ROOT}/resize.py\" ${usage_height:+--height $usage_height} ${usage_width:+--width $usage_width} $usage_inputs"
