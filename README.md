@@ -8,7 +8,9 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
 
 ## Usage
 
-> [!TIP] You'll need a Mac running macOS 13.0 or later, with
+> [!TIP]
+>
+> You'll need a Mac running macOS 13.0 or later, with
 > [Inkscape](https://inkscape.org) and [mise](https://mise.jdx.dev) installed.
 
 1.  Clone this repo to your computer:
@@ -45,8 +47,10 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
 
     The resulting image will be your "sticker image".
 
-    **Please place it in the
-    repository folder (i.e. `stickers/my-project/<file>.png`)**.
+    > [!IMPORTANT]
+    >
+    > Please place the sticker image within the repository folder
+    > (i.e. `stickers/my-project/<file>.png`)
 
 4.  Convert the image to a black silhouette:
 
@@ -54,8 +58,10 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
     mise silhouettify ./<file>.png  # creates ./<file>-silhouette.png
     ```
 
-    > [!TIP] `mise silhouettify` and other tools will also work in
-    > subdirectories within the the repo root.
+    > [!TIP]
+    >
+    > `mise silhouettify` and other tools will also work in subdirectories
+    > within the the repo root.
 
 5.  Use Inkscape to add a sticker border around your sticker image:
     1. Open the silhouette image in Inkscape. Then, select the image in "Layers
@@ -91,11 +97,13 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
        are happy with the offset. This will be the white border that appears
        around your sticker.
 
-          <img src="./docs/dynamic_offset.png" width="400">
+       <img src="./docs/dynamic_offset.png" width="400">
 
-       > [!TIP] You may notice some weird artifacts / "glitches" that appear as
-       > you drag the handle during Dynamic Offset mode. This is normal and will
-       > be addressed in the next step.
+       > [!TIP]
+       >
+       > You may notice some weird artifacts / "glitches" that appear as you
+       > drag the handle during Dynamic Offset mode. This is normal and will be
+       > addressed in the next step.
 
     8. Press "Cmd + Shift + C" to finalize the offset and convert it into a vector
        path. Press N to switch to the "Node Tool", and you should now see all the
