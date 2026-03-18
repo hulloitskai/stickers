@@ -47,10 +47,8 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
 
     The resulting image will be your "sticker image".
 
-    > [!IMPORTANT]
-    >
-    > Please place the sticker image within the repository folder
-    > (i.e. `stickers/my-project/<file>.png`)
+    _Please place the sticker image within the repository folder
+    (i.e. `stickers/my-project/<file>.png`)._
 
 4.  Convert the image to a black silhouette:
 
@@ -58,10 +56,8 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
     mise silhouettify ./<file>.png  # creates ./<file>-silhouette.png
     ```
 
-    > [!TIP]
-    >
-    > `mise silhouettify` and other tools will also work in subdirectories
-    > within the the repo root.
+    _`mise silhouettify` and other tools will also work in subdirectories
+    within the the repo root._
 
 5.  Use Inkscape to add a sticker border around your sticker image:
     1. Open the silhouette image in Inkscape. Then, select the image in "Layers
@@ -99,19 +95,17 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
 
        <img src="./docs/dynamic_offset.png" width="400">
 
-       > [!TIP]
-       >
-       > You may notice some weird artifacts / "glitches" that appear as you
-       > drag the handle during Dynamic Offset mode. This is normal and will be
-       > addressed in the next step.
+       _You may notice some weird artifacts / "glitches" that appear as you
+       drag the handle during Dynamic Offset mode. This is normal and will be
+       addressed in the next step._
 
     8. Press "Cmd + Shift + C" to finalize the offset and convert it into a vector
-       path. Press N to switch to the "Node Tool", and you should now see all the
+       path. Press "N" to switch to the Node Tool, and you should now see all the
        new nodes that make up the extruded vector path.
 
        <img src="./docs/finalize_offset.png" width="400">
 
-    9. Manually select and delete the nodes that create "holes" in the extruded
+    9. Manually select and delete the nodes that create "holes" in the
        silhouette vector. Also delete any nodes that create jagged spikes around
        the exterior path.
 
@@ -141,7 +135,7 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
     sticker image, so:
 
 7.  (Optional) Resize the final PDF to a specific size for printing. Simply
-    specify _EITHER_ the width or height, and the other dimension will be
+    specify EITHER the width or height, and the other dimension will be
     automatically computed to preserve the aspect ratio:
 
     ```bash
