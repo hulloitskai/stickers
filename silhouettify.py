@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """silhouettify.py - Convert PNG files to black silhouettes."""
 
 from pathlib import Path
@@ -22,7 +23,9 @@ app = typer.Typer()
 @app.command()
 def main(
     inputs: Annotated[list[Path], typer.Argument(help="PNG file(s) to process")],
-    output_dir: Annotated[Optional[Path], typer.Option(help="Output directory (default: same as input)")] = None,
+    output_dir: Annotated[
+        Optional[Path], typer.Option(help="Output directory (default: same as input)")
+    ] = None,
 ):
     """Convert PNG files to black silhouettes."""
     if output_dir and not output_dir.is_dir():

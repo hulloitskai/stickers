@@ -1,0 +1,29 @@
+amends "package://github.com/jdx/hk/releases/download/v1.38.0/hk@1.38.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.38.0/hk@1.38.0#/Builtins.pkl"
+
+local linters = new Mapping<String, Step> {
+  ["ruff"] = (Builtins.ruff) {
+    batch = true
+  }
+  ["ruff_format"] = (Builtins.ruff_format) {
+    depends = "ruff"
+  }
+  ["mypy"] = (Builtins.mypy) {
+    stomp = true
+  }
+}
+
+hooks {
+  ["pre-commit"] {
+    fix = true
+    stash = "git"
+    steps = linters
+  }
+  ["fix"] {
+    fix = true
+    steps = linters
+  }
+  ["check"] {
+    steps = linters
+  }
+}

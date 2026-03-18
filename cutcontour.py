@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+
 """
 cutcontour.py - Generate CutContour PDF for Roland VersaWorks
 
-Extracts path elements from an Inkscape SVG and creates a PDF with those
+Extracts path elements from an SVG and creates a PDF with those
 paths drawn using a "CutContour" spot color separation, which VersaWorks
 recognizes for contour cutting.
 """
@@ -12,6 +13,7 @@ import math
 import base64
 from io import BytesIO
 from pathlib import Path
+import sys
 from typing import Annotated
 import xml.etree.ElementTree as ET
 import typer
@@ -21,8 +23,8 @@ from reportlab.lib.colors import CMYKColorSep
 from reportlab.lib.utils import ImageReader
 
 
-SVG_NS = '{http://www.w3.org/2000/svg}'
-XLINK_NS = '{http://www.w3.org/1999/xlink}'
+SVG_NS = "{http://www.w3.org/2000/svg}"
+XLINK_NS = "{http://www.w3.org/1999/xlink}"
 IDENTITY = (1, 0, 0, 1, 0, 0)
 SVG_PX_TO_PT = 72 / 96  # Inkscape 96 DPI -> PDF 72 DPI
 
@@ -32,12 +34,12 @@ def compose(m1, m2):
     a1, b1, c1, d1, e1, f1 = m1
     a2, b2, c2, d2, e2, f2 = m2
     return (
-        a1*a2 + c1*b2,
-        b1*a2 + d1*b2,
-        a1*c2 + c1*d2,
-        b1*c2 + d1*d2,
-        a1*e2 + c1*f2 + e1,
-        b1*e2 + d1*f2 + f1,
+        a1 * a2 + c1 * b2,
+        b1 * a2 + d1 * b2,
+        a1 * c2 + c1 * d2,
+        b1 * c2 + d1 * d2,
+        a1 * e2 + c1 * f2 + e1,
+        b1 * e2 + d1 * f2 + f1,
     )
 
 
@@ -46,23 +48,23 @@ def parse_transform(s):
     if not s:
         return IDENTITY
     result = IDENTITY
-    for match in re.finditer(r'(matrix|translate|scale|rotate)\s*\(([^)]+)\)', s):
+    for match in re.finditer(r"(matrix|translate|scale|rotate)\s*\(([^)]+)\)", s):
         func, args_str = match.group(1), match.group(2)
-        args = [float(x) for x in re.split(r'[\s,]+', args_str.strip())]
-        if func == 'matrix' and len(args) == 6:
+        args = [float(x) for x in re.split(r"[\s,]+", args_str.strip())]
+        if func == "matrix" and len(args) == 6:
             m = tuple(args)
-        elif func == 'translate':
+        elif func == "translate":
             m = (1, 0, 0, 1, args[0], args[1] if len(args) > 1 else 0)
-        elif func == 'scale':
+        elif func == "scale":
             sx = args[0]
             sy = args[1] if len(args) > 1 else sx
             m = (sx, 0, 0, sy, 0, 0)
-        elif func == 'rotate':
+        elif func == "rotate":
             a = math.radians(args[0])
             ca, sa = math.cos(a), math.sin(a)
             if len(args) == 3:
                 cx, cy = args[1], args[2]
-                m = (ca, sa, -sa, ca, cx - ca*cx + sa*cy, cy - sa*cx - ca*cy)
+                m = (ca, sa, -sa, ca, cx - ca * cx + sa * cy, cy - sa * cx - ca * cy)
             else:
                 m = (ca, sa, -sa, ca, 0, 0)
         else:
@@ -77,7 +79,7 @@ def get_ancestor_transform(element, parent_map):
     el = element
     while el in parent_map:
         el = parent_map[el]
-        t = parse_transform(el.get('transform'))
+        t = parse_transform(el.get("transform"))
         if t != IDENTITY:
             chain.append(t)
     # Compose from root down
@@ -85,7 +87,7 @@ def get_ancestor_transform(element, parent_map):
     for t in reversed(chain):
         result = compose(result, t)
     # Include element's own transform
-    own = parse_transform(element.get('transform'))
+    own = parse_transform(element.get("transform"))
     if own != IDENTITY:
         result = compose(result, own)
     return result
@@ -153,27 +155,33 @@ def draw_path_on_canvas(canvas, d_string):
             p.lineTo(seg.end.real, seg.end.imag)
         elif isinstance(seg, CubicBezier):
             p.curveTo(
-                seg.control1.real, seg.control1.imag,
-                seg.control2.real, seg.control2.imag,
-                seg.end.real, seg.end.imag,
+                seg.control1.real,
+                seg.control1.imag,
+                seg.control2.real,
+                seg.control2.imag,
+                seg.end.real,
+                seg.end.imag,
             )
         elif isinstance(seg, QuadraticBezier):
             s, ctrl, e = seg.start, seg.control, seg.end
-            c1 = s + (2/3) * (ctrl - s)
-            c2 = e + (2/3) * (ctrl - e)
+            c1 = s + (2 / 3) * (ctrl - s)
+            c2 = e + (2 / 3) * (ctrl - e)
             p.curveTo(c1.real, c1.imag, c2.real, c2.imag, e.real, e.imag)
         elif isinstance(seg, Arc):
             # Convert arc to cubic bezier curves
             for bez in arc_to_beziers(seg):
                 p.curveTo(
-                    bez[1].real, bez[1].imag,
-                    bez[2].real, bez[2].imag,
-                    bez[3].real, bez[3].imag,
+                    bez[1].real,
+                    bez[1].imag,
+                    bez[2].real,
+                    bez[2].imag,
+                    bez[3].real,
+                    bez[3].imag,
                 )
 
         current = seg.end
 
-    if d_string.rstrip()[-1:].lower() == 'z':
+    if d_string.rstrip()[-1:].lower() == "z":
         p.close()
 
     canvas.drawPath(p, stroke=1, fill=0)
@@ -187,28 +195,28 @@ def process_svg(input_path, output_path):
     parent_map = {child: parent for parent in root.iter() for child in parent}
 
     # Get dimensions from viewBox or width/height
-    viewbox = root.get('viewBox')
+    viewbox = root.get("viewBox")
     if viewbox:
         parts = viewbox.split()
         vb_x, vb_y = float(parts[0]), float(parts[1])
         svg_w, svg_h = float(parts[2]), float(parts[3])
     else:
         vb_x, vb_y = 0, 0
-        svg_w = float(re.sub(r'[^\d.]', '', root.get('width', '0')))
-        svg_h = float(re.sub(r'[^\d.]', '', root.get('height', '0')))
+        svg_w = float(re.sub(r"[^\d.]", "", root.get("width", "0")))
+        svg_h = float(re.sub(r"[^\d.]", "", root.get("height", "0")))
 
     # PDF page size in points
     page_w = svg_w * SVG_PX_TO_PT
     page_h = svg_h * SVG_PX_TO_PT
 
     # Find all path elements
-    paths = root.findall(f'.//{SVG_NS}path') or root.findall('.//path')
+    paths = root.findall(f".//{SVG_NS}path") or root.findall(".//path")
     if not paths:
         print(f"Warning: No paths found in {input_path}", file=sys.stderr)
 
     # Create PDF with CutContour spot color
     c = Canvas(str(output_path), pagesize=(page_w, page_h))
-    cutcontour_color = CMYKColorSep(0, 1, 0, 0, spotName='CutContour', density=1)
+    cutcontour_color = CMYKColorSep(0, 1, 0, 0, spotName="CutContour", density=1)
     c.setStrokeColor(cutcontour_color)
     c.setLineWidth(0.25)
 
@@ -219,19 +227,19 @@ def process_svg(input_path, output_path):
         c.translate(-vb_x, -vb_y)
 
     # Draw embedded images (the sticker artwork)
-    images = root.findall(f'.//{SVG_NS}image') or root.findall('.//image')
+    images = root.findall(f".//{SVG_NS}image") or root.findall(".//image")
     for img_el in images:
-        href = img_el.get(f'{XLINK_NS}href') or img_el.get('href')
+        href = img_el.get(f"{XLINK_NS}href") or img_el.get("href")
         if not href:
             continue
 
-        x = float(img_el.get('x', '0'))
-        y = float(img_el.get('y', '0'))
-        w = float(img_el.get('width', '0'))
-        h = float(img_el.get('height', '0'))
+        x = float(img_el.get("x", "0"))
+        y = float(img_el.get("y", "0"))
+        w = float(img_el.get("width", "0"))
+        h = float(img_el.get("height", "0"))
 
-        if href.startswith('data:'):
-            _, data = href.split(',', 1)
+        if href.startswith("data:"):
+            _, data = href.split(",", 1)
             img_data = ImageReader(BytesIO(base64.b64decode(data)))
         else:
             img_data = str(input_path.parent / href)
@@ -243,12 +251,12 @@ def process_svg(input_path, output_path):
         # Un-flip Y locally so the image renders right-side up
         c.translate(x, y + h)
         c.scale(1, -1)
-        c.drawImage(img_data, 0, 0, width=w, height=h, mask='auto')
+        c.drawImage(img_data, 0, 0, width=w, height=h, mask="auto")
         c.restoreState()
 
     # Draw each path with its accumulated transform (CutContour)
     for path_el in paths:
-        d = path_el.get('d')
+        d = path_el.get("d")
         if not d:
             continue
         transform = get_ancestor_transform(path_el, parent_map)
@@ -269,17 +277,17 @@ app = typer.Typer()
 def main(
     svgs: Annotated[list[Path], typer.Argument(help="SVG file(s) to process")],
 ):
-    """Generate CutContour PDF(s) from Inkscape SVG file(s) for Roland VersaWorks."""
+    """Generate CutContour PDF(s) from SVG file(s) for Roland VersaWorks."""
     for input_path in svgs:
         if not input_path.exists():
             typer.echo(f"Error: {input_path} not found", err=True)
             raise typer.Exit(1)
-        if input_path.suffix.lower() != '.svg':
+        if input_path.suffix.lower() != ".svg":
             typer.echo(f"Skipping non-SVG file: {input_path}", err=True)
             continue
         output_path = input_path.parent / f"{input_path.stem}-cutcontour.pdf"
         process_svg(input_path, output_path)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app()

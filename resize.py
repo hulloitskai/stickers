@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 resize.py - Resize PDF(s) to a target height or width in centimeters
 
@@ -18,7 +19,12 @@ CM_TO_PT = 72 / 2.54
 app = typer.Typer()
 
 
-def process_pdf(input_path: Path, output_path: Path, target_h_cm: float | None, target_w_cm: float | None) -> None:
+def process_pdf(
+    input_path: Path,
+    output_path: Path,
+    target_h_cm: float | None,
+    target_w_cm: float | None,
+) -> None:
     reader = PdfReader(str(input_path))
     writer = PdfWriter()
 
@@ -29,6 +35,7 @@ def process_pdf(input_path: Path, output_path: Path, target_h_cm: float | None, 
         if target_h_cm is not None:
             scale = (target_h_cm * CM_TO_PT) / page_h
         else:
+            assert target_w_cm is not None
             scale = (target_w_cm * CM_TO_PT) / page_w
 
         page.scale_by(scale)
@@ -41,9 +48,15 @@ def process_pdf(input_path: Path, output_path: Path, target_h_cm: float | None, 
 @app.command()
 def main(
     inputs: List[Path] = typer.Argument(..., metavar="FILE.pdf"),
-    height: Optional[float] = typer.Option(None, "-H", "--height", metavar="CM", help="Target height in cm"),
-    width: Optional[float] = typer.Option(None, "-W", "--width", metavar="CM", help="Target width in cm"),
-    open_after: bool = typer.Option(False, "--open", help="Open the output file after processing"),
+    height: Optional[float] = typer.Option(
+        None, "-H", "--height", metavar="CM", help="Target height in cm"
+    ),
+    width: Optional[float] = typer.Option(
+        None, "-W", "--width", metavar="CM", help="Target width in cm"
+    ),
+    open_after: bool = typer.Option(
+        False, "--open", help="Open the output file after processing"
+    ),
 ):
     """Resize PDF(s) to a target height or width in centimeters, preserving aspect ratio."""
     if height is None and width is None:
@@ -54,6 +67,7 @@ def main(
         raise typer.Exit(1)
 
     cm = height if height is not None else width
+    assert cm is not None
     if cm <= 0:
         typer.echo(f"Error: cm value must be positive, got {cm}", err=True)
         raise typer.Exit(1)

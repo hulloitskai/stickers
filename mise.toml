@@ -1,6 +1,8 @@
 [tools]
 python = "3.13"
-uv = "latest"
+uv = { version = "latest", postinstall = "uv sync" }
+pkl = "0.30.2"
+hk = { version = "1.38.0", postinstall = "hk install" }
 
 [settings]
 experimental = true
@@ -8,8 +10,9 @@ experimental = true
 [settings.python]
 uv_venv_auto = "create|source"
 
-[hooks]
-postinstall = "uv sync"
+[tasks]
+fix = { run = "hk fix" }
+check = { run = "hk check" }
 
 [tasks.cutcontour]
 description = "Generate CutContour PDF(s) from SVG file(s)"

@@ -169,9 +169,15 @@ mise silhouettify ./<file>.png  # creates ./<file>-silhouette.png
 
 ### Tool: `cutcontour`
 
-Takes an SVG and generates a PDF with the cut paths drawn using a
-`CutContour` spot color separation, which Roland VersaWorks recognizes for
-contour cutting. Also embeds any images from the SVG as the sticker artwork.
+Converts an SVG into a print-ready PDF for Roland vinyl printer/cutters.
+
+It parses the SVG for path elements and redraws them in the PDF using a
+`CutContour` spot color separation — a special named color that Roland
+VersaWorks recognizes as a contour cutting instruction. Embedded images
+(i.e. sticker artwork) are also embedded in the PDF.
+
+The result is a single PDF where VersaWorks will print the artwork and then
+automatically cut along the paths.
 
 ```bash
 mise cutcontour ./<file>.svg    # creates ./<file>-cutcontour.pdf

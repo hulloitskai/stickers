@@ -9,3 +9,12 @@ dependencies = [
     "typer>=0.24.1",
     "pypdf",
 ]
+
+[tool.mypy]
+disable_error_code = ["import-untyped"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.1",
+    "ruff>=0.15.6",
+]
