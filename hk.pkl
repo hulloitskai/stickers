@@ -8,7 +8,7 @@ local linters = new Mapping<String, Step> {
   ["ruff_format"] = (Builtins.ruff_format) {
     depends = "ruff"
   }
-  ["mypy"] = (Builtins.mypy) {
+  ["ty"] = (Builtins.ty) {
     stomp = true
   }
 }

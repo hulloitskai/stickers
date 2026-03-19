@@ -10,11 +10,11 @@ dependencies = [
     "pypdf",
 ]
 
-[tool.mypy]
-disable_error_code = ["import-untyped"]
+[tool.ty.rules]
+unresolved-import = "ignore"
 
 [dependency-groups]
 dev = [
-    "mypy>=1.19.1",
+    "ty",
     "ruff>=0.15.6",
 ]
