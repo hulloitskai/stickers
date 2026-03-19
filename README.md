@@ -45,7 +45,9 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
 
       <img src="./docs/use_as_mask.png" width="250">
 
-    The resulting image will be your "sticker image".
+    The resulting image will be your "sticker image":
+
+    <img src="./docs/sticker_image.png" width="160">
 
     _Please place the sticker image within the repository folder
     (i.e. `stickers/my-project/<file>.png`)._
@@ -55,6 +57,8 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
     ```bash
     mise silhouettify ./<file>.png  # creates ./<file>-silhouette.png
     ```
+
+    <img src="./docs/silhouette.png" width="160">
 
     _`mise silhouettify` and other tools will also work in subdirectories
     within the the repo root._
@@ -114,7 +118,8 @@ Tutorial video: https://www.loom.com/share/d3a934b9ef2d46a0a5c6d581f5440f7f
     10. Go to "Fill and Stroke" and set the fill to white and the stroke to
         black.
 
-       <img src="./docs/style_silhouette.png" width="400">
+        <img src="./docs/style_silhouette.png" width="400">
+
     11. While making sure the silhouette vector is selected, press
         "Cmd + Shift + R" to resize the document to the size of the vector.
 
