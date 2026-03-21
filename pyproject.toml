@@ -8,6 +8,7 @@ dependencies = [
     "Pillow",
     "typer>=0.24.1",
     "pypdf",
+    "shapely>=2.1.2",
 ]
 
 [tool.mypy]

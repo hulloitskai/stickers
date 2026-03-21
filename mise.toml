@@ -33,3 +33,11 @@ flag "-W --width <CM>" help="Target width in cm"
 arg "<inputs>" var=#true help="PDF files to resize"
 '''
 run = "cd \"${MISE_ORIGINAL_CWD}\" && python \"${MISE_PROJECT_ROOT}/resize.py\" ${usage_height:+--height $usage_height} ${usage_width:+--width $usage_width} $usage_inputs"
+
+[tasks.rightsize]
+description = "Resize SVG viewport to tightly fit content"
+usage = '''
+arg "<svgs>" var=#true help="SVG file(s) to process"
+flag "-p --padding <PX>" help="Visual padding in pixels (default: 1.0)"
+'''
+run = "cd \"${MISE_ORIGINAL_CWD}\" && python \"${MISE_PROJECT_ROOT}/rightsize.py\" ${usage_padding:+--padding $usage_padding} $usage_svgs"
